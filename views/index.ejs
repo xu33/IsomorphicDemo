@@ -2,13 +2,20 @@
 <html>
 <head>
 	<meta charset="utf8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+	<script src="http://3gimg.qq.com/wspbbs/nodepc/tos/javascripts/mobile/swipe_f26092e83c64ad8e4b04d6efa4cb706f.js"></script>
 	<title>IsomorphicDemo</title>
+	<style>
+	* {margin:0;padding:0;}
+	body {font: 14px/1.6 "Microsoft Yahei",Tahoma,Verdana,Arial,Helvetica,sans-serif;}
+	</style>
 </head>
 <body>
 <div id="componentContainer"><%-markup%></div>
 <script>
 var ReactData = {
-	arr: <%-JSON.stringify(arr)%>
+	banners: <%-JSON.stringify(banners)%>,
+	threads: <%-JSON.stringify(threads)%>
 }
 </script>
 <script src="/javascripts/main.js"></script>

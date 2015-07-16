@@ -9,8 +9,8 @@ gulp.task('compile', function() {
 	})
 
 	var res = gulp.src('reactComponents/*.jsx')
-						.pipe(babel())
-						.pipe(gulp.dest('reactComponentsCompiled'))
+		.pipe(babel())
+		.pipe(gulp.dest('reactComponentsCompiled'))
 
 	res.on('end', function() {
 		b.bundle().pipe(fs.createWriteStream('public/javascripts/main.js'))

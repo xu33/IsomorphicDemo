@@ -19813,63 +19813,233 @@ module.exports = require('./lib/React');
 
 var React = require('react');
 var List = require('./list.js');
+var Banner = require('./banner.js');
 
 var App = React.createClass({
 	displayName: 'App',
 
+	componentDidMount: function componentDidMount() {},
 	render: function render() {
 		return React.createElement(
 			'div',
 			null,
-			React.createElement(List, { arr: this.props.arr }),
 			React.createElement(
-				'button',
-				{ onClick: this.handleClick },
-				'我可以点击'
-			)
+				'h1',
+				{ style: styles.header },
+				'论坛'
+			),
+			React.createElement(Banner, { banners: this.props.banners }),
+			React.createElement(List, { threads: this.props.threads, onChange: this.handleChange })
 		);
 	},
-	handleClick: function handleClick() {
-		var arr = this.props.arr;
-		arr.push(arr.length + 1);
-
+	handleChange: function handleChange(newThreads) {
+		var threads = this.props.threads.concat(newThreads);
 		this.setProps({
-			arr: arr
+			threads: threads
 		});
 	}
 });
 
+var styles = {
+	header: {
+		backgroundColor: '#2776dc',
+		color: '#fff',
+		fontSize: '16px',
+		height: '50px',
+		lineHeight: '50px',
+		padding: '0 50px',
+		textAlign: 'center'
+	}
+};
+
 module.exports = App;
-},{"./list.js":158,"react":156}],158:[function(require,module,exports){
+},{"./banner.js":158,"./list.js":159,"react":156}],158:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
-var List = React.createClass({
-	displayName: 'List',
+var Banner = React.createClass({
+	displayName: 'Banner',
 
 	render: function render() {
 		return React.createElement(
-			'ul',
-			null,
-			this.props.arr.map(function (item, index) {
-				return React.createElement(
-					'li',
-					{ key: index },
-					item
-				);
-			}, this)
+			'div',
+			{ style: styles.wrapper, ref: 'wrapper' },
+			React.createElement(
+				'ul',
+				{ style: styles.slider },
+				this.props.banners.map(function (item, index) {
+					return React.createElement(
+						'li',
+						{ style: styles.item },
+						React.createElement('img', { src: item.picture, style: styles.img })
+					);
+				})
+			)
+		);
+	},
+	componentDidMount: function componentDidMount() {
+		// console.log('componentDidMount fire', React.findDOMNode(this.refs.wrapper))
+		Swipe(React.findDOMNode(this.refs.wrapper), {
+			continuous: true
+		});
+	}
+});
+
+var styles = {
+	wrapper: {
+		position: 'relative',
+		width: '375px',
+		height: '150px',
+		overflow: 'hidden'
+	},
+	slider: {
+		overflow: 'hidden',
+		listStyle: 'none',
+		position: 'relative',
+		bottom: 0,
+		right: 0,
+		left: 0,
+		top: 0
+	},
+	item: {
+		float: 'left',
+		width: '100%',
+		position: 'relative'
+	},
+	img: {
+		width: '100%',
+		height: '100%'
+	}
+};
+
+module.exports = Banner;
+},{"react":156}],159:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+
+var ThreadItem = React.createClass({
+	displayName: 'ThreadItem',
+
+	render: function render() {
+		var avatar = 'http://bbs.tos.cn/ajax/getUserIcon?uid=' + this.props.authorid;
+		return React.createElement(
+			'div',
+			{ style: styles.thread },
+			React.createElement(
+				'div',
+				{ style: styles.avatar },
+				React.createElement('img', { src: avatar, style: styles.img })
+			),
+			React.createElement(
+				'div',
+				{ style: styles.info },
+				React.createElement(
+					'div',
+					{ style: styles.subject },
+					this.props.subject
+				),
+				React.createElement(
+					'div',
+					{ style: styles.author },
+					this.props.author
+				)
+			)
 		);
 	}
 });
 
+var List = React.createClass({
+	displayName: 'List',
+
+	componentDidMount: function componentDidMount() {},
+	render: function render() {
+		return React.createElement(
+			'div',
+			{ style: styles.container },
+			this.props.threads.map(function (item, index) {
+				return React.createElement(ThreadItem, {
+					subject: item.subject,
+					author: item.author,
+					authorid: item.authorid,
+					key: item.tid
+				});
+			}, this),
+			this.renderFooter()
+		);
+	},
+	renderFooter: function renderFooter() {
+		return React.createElement(
+			'div',
+			{ style: styles.footer },
+			React.createElement(
+				'button',
+				{ style: styles.btn, onClick: this.loadMore },
+				'加载更多'
+			)
+		);
+	},
+	loadMore: function loadMore() {
+		var _this = this;
+
+		fetch('/getThreads?offset=' + this.props.threads.length).then(function (response) {
+			return response.json();
+		}).then(function (responseData) {
+			_this.props.onChange(responseData);
+		});
+	}
+});
+
+var styles = {
+	container: {},
+	thread: {
+		display: 'flex',
+		flexDirection: 'row',
+		padding: '10px 8px',
+		borderBottom: '1px solid rgba(0,0,0,.15)'
+	},
+	avatar: {},
+	img: {
+		width: '160px',
+		height: '90px'
+	},
+	info: {
+		marginLeft: '10px',
+		height: '90px',
+		position: 'relative'
+	},
+	subject: {},
+	author: {
+		color: '#92979a',
+		position: 'absolute',
+		bottom: 0
+	},
+	footer: {
+		display: 'flex',
+		justifyContent: 'center',
+		padding: '10px 0'
+	},
+	btn: {
+		height: '28px',
+		lineHeight: '28px',
+		width: '94px',
+		backgroundColor: '#fff',
+		border: '1px solid #2776dc',
+		color: '#2776dc'
+	}
+};
+
 module.exports = List;
-},{"react":156}],159:[function(require,module,exports){
+},{"react":156}],160:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var App = require('./app.js');
 
 document.addEventListener('DOMContentLoaded', function () {
-	React.render(React.createElement(App, { arr: ReactData.arr }), document.body);
+	React.render(React.createElement(App, {
+		banners: ReactData.banners,
+		threads: ReactData.threads
+	}), document.body);
 });
-},{"./app.js":157,"react":156}]},{},[159]);
+},{"./app.js":157,"react":156}]},{},[160]);

@@ -1,23 +1,38 @@
 var React = require('react')
 var List = require('./list.js')
+var Banner = require('./banner.js')
 
 var App = React.createClass({
+	componentDidMount: function() {
+		
+	},
 	render: function() {
 		return (
-		<div>
-		<List arr={this.props.arr} />
-		<button onClick={this.handleClick}>我可以点击</button>
-		</div>
+			<div>
+				<h1 style={styles.header}>论坛</h1>
+				<Banner banners={this.props.banners} />
+				<List threads={this.props.threads} onChange={this.handleChange}/>
+			</div>
 		)
 	},
-	handleClick: function() {
-		var arr = this.props.arr
-		arr.push(arr.length + 1)
-
+	handleChange: function(newThreads) {
+		var threads = this.props.threads.concat(newThreads)
 		this.setProps({
-			arr: arr
+			threads: threads
 		})
 	}
 })
+
+var styles = {
+	header: {
+		backgroundColor: '#2776dc',
+		color: '#fff',
+		fontSize: '16px',
+		height: '50px',
+		lineHeight: '50px',
+		padding: '0 50px',
+		textAlign: 'center'
+	}
+}
 
 module.exports = App
