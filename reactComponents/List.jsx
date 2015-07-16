@@ -79,7 +79,7 @@ var styles = {
 		position:'relative'
 	},
 	subject: {
-		
+		fontSize: '13px'
 	},
 	author: {
 		color: '#92979a',

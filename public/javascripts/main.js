@@ -19857,6 +19857,7 @@ module.exports = App;
 'use strict';
 
 var React = require('react');
+
 var Banner = React.createClass({
 	displayName: 'Banner',
 
@@ -20008,7 +20009,9 @@ var styles = {
 		height: '90px',
 		position: 'relative'
 	},
-	subject: {},
+	subject: {
+		fontSize: '13px'
+	},
 	author: {
 		color: '#92979a',
 		position: 'absolute',

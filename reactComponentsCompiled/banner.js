@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+
 var Banner = React.createClass({
 	displayName: 'Banner',
 
