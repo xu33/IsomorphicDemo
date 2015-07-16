@@ -1,13 +1,35 @@
 var React = require('react')
 
+var mixin = function() {
+	var ret = {}
+	var args = arguments
+	for (var i = 0; i < args.length; i++) {
+		for (var key in args[i]) {
+			if (args[i].hasOwnProperty(key)) {
+				ret[key] = args[i][key]
+			}
+		}
+	}
+	return ret
+}
+
+var bannerBound = {
+	width: 0,
+	height: 0
+}
+
 var Banner = React.createClass({
 	render: function() {
 		return (
-			<div style={styles.wrapper} ref="wrapper">
-				<ul style={styles.slider}>
+			<div style={mixin(styles.wrapper, bannerBound)} ref="wrapper">
+				<ul style={mixin(styles.slider, bannerBound)}>
 				{
 					this.props.banners.map((item, index) => {
-						return <li style={styles.item}><img src={item.picture} style={styles.img} /></li>
+						return (
+							<li style={mixin(styles.item, bannerBound)} key={index}>
+								<img src={item.picture} style={mixin(styles.img, bannerBound)} />
+							</li>
+						)
 					})
 				}
 				</ul>
@@ -15,9 +37,13 @@ var Banner = React.createClass({
 		)
 	},
 	componentDidMount: function() {
-		// console.log('componentDidMount fire', React.findDOMNode(this.refs.wrapper))
-		Swipe(React.findDOMNode(this.refs.wrapper), {
-			continuous: true
+		bannerBound.width = window.innerWidth + 'px'
+		bannerBound.height = Math.round(366 * window.innerWidth / 1000) + 'px'
+
+		this.setState({}, () => {
+			Swipe(React.findDOMNode(this.refs.wrapper), {
+				continuous: true
+			})
 		})
 	}
 })
@@ -25,27 +51,19 @@ var Banner = React.createClass({
 var styles = {
 	wrapper: {
 		position: 'relative',
-		width:'375px',
-		height:'150px',
 		overflow:'hidden'
 	},
 	slider: {
 		overflow: 'hidden',
 		listStyle: 'none',
-		position: 'relative',
-		bottom: 0,
-		right: 0,
-		left: 0,
-		top: 0
+		position: 'relative'
 	},
 	item: {
 		float: 'left',
-		width: '100%',
-		position: 'relative',
+		position: 'relative'
 	},
 	img: {
-		width: '100%',
-		height: '100%'
+		
 	}
 }
 

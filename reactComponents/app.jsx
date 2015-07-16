@@ -11,11 +11,11 @@ var App = React.createClass({
 			<div>
 				<h1 style={styles.header}>论坛</h1>
 				<Banner banners={this.props.banners} />
-				<List threads={this.props.threads} onChange={this.handleChange}/>
+				<List threads={this.props.threads} onChange={this.handleListChange}/>
 			</div>
 		)
 	},
-	handleChange: function(newThreads) {
+	handleListChange: function(newThreads) {
 		var threads = this.props.threads.concat(newThreads)
 		this.setProps({
 			threads: threads

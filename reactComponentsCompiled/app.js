@@ -18,10 +18,10 @@ var App = React.createClass({
 				'论坛'
 			),
 			React.createElement(Banner, { banners: this.props.banners }),
-			React.createElement(List, { threads: this.props.threads, onChange: this.handleChange })
+			React.createElement(List, { threads: this.props.threads, onChange: this.handleListChange })
 		);
 	},
-	handleChange: function handleChange(newThreads) {
+	handleListChange: function handleListChange(newThreads) {
 		var threads = this.props.threads.concat(newThreads);
 		this.setProps({
 			threads: threads

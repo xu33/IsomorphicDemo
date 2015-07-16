@@ -2,30 +2,54 @@
 
 var React = require('react');
 
+var mixin = function mixin() {
+	var ret = {};
+	var args = arguments;
+	for (var i = 0; i < args.length; i++) {
+		for (var key in args[i]) {
+			if (args[i].hasOwnProperty(key)) {
+				ret[key] = args[i][key];
+			}
+		}
+	}
+	return ret;
+};
+
+var bannerBound = {
+	width: 0,
+	height: 0
+};
+
 var Banner = React.createClass({
 	displayName: 'Banner',
 
 	render: function render() {
 		return React.createElement(
 			'div',
-			{ style: styles.wrapper, ref: 'wrapper' },
+			{ style: mixin(styles.wrapper, bannerBound), ref: 'wrapper' },
 			React.createElement(
 				'ul',
-				{ style: styles.slider },
+				{ style: mixin(styles.slider, bannerBound) },
 				this.props.banners.map(function (item, index) {
 					return React.createElement(
 						'li',
-						{ style: styles.item },
-						React.createElement('img', { src: item.picture, style: styles.img })
+						{ style: mixin(styles.item, bannerBound), key: index },
+						React.createElement('img', { src: item.picture, style: mixin(styles.img, bannerBound) })
 					);
 				})
 			)
 		);
 	},
 	componentDidMount: function componentDidMount() {
-		// console.log('componentDidMount fire', React.findDOMNode(this.refs.wrapper))
-		Swipe(React.findDOMNode(this.refs.wrapper), {
-			continuous: true
+		var _this = this;
+
+		bannerBound.width = window.innerWidth + 'px';
+		bannerBound.height = Math.round(366 * window.innerWidth / 1000) + 'px';
+
+		this.setState({}, function () {
+			Swipe(React.findDOMNode(_this.refs.wrapper), {
+				continuous: true
+			});
 		});
 	}
 });
@@ -33,28 +57,18 @@ var Banner = React.createClass({
 var styles = {
 	wrapper: {
 		position: 'relative',
-		width: '375px',
-		height: '150px',
 		overflow: 'hidden'
 	},
 	slider: {
 		overflow: 'hidden',
 		listStyle: 'none',
-		position: 'relative',
-		bottom: 0,
-		right: 0,
-		left: 0,
-		top: 0
+		position: 'relative'
 	},
 	item: {
 		float: 'left',
-		width: '100%',
 		position: 'relative'
 	},
-	img: {
-		width: '100%',
-		height: '100%'
-	}
+	img: {}
 };
 
 module.exports = Banner;
