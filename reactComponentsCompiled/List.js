@@ -36,7 +36,6 @@ var ThreadItem = React.createClass({
 var List = React.createClass({
 	displayName: 'List',
 
-	componentDidMount: function componentDidMount() {},
 	render: function render() {
 		return React.createElement(
 			'div',
@@ -84,12 +83,12 @@ var styles = {
 	},
 	avatar: {},
 	img: {
-		width: '160px',
-		height: '90px'
+		width: '34px',
+		height: '34px'
 	},
 	info: {
 		marginLeft: '10px',
-		height: '90px',
+		height: '40px',
 		position: 'relative'
 	},
 	subject: {
@@ -98,6 +97,7 @@ var styles = {
 	author: {
 		color: '#92979a',
 		position: 'absolute',
+		fontSize: '11px',
 		bottom: 0
 	},
 	footer: {

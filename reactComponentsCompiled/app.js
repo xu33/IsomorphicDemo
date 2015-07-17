@@ -7,7 +7,6 @@ var Banner = require('./banner.js');
 var App = React.createClass({
 	displayName: 'App',
 
-	componentDidMount: function componentDidMount() {},
 	render: function render() {
 		return React.createElement(
 			'div',
@@ -37,7 +36,8 @@ var styles = {
 		height: '50px',
 		lineHeight: '50px',
 		padding: '0 50px',
-		textAlign: 'center'
+		textAlign: 'center',
+		fontWeight: 100
 	}
 };
 

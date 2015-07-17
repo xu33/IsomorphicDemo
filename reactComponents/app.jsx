@@ -3,9 +3,6 @@ var List = require('./list.js')
 var Banner = require('./banner.js')
 
 var App = React.createClass({
-	componentDidMount: function() {
-		
-	},
 	render: function() {
 		return (
 			<div>
@@ -31,7 +28,8 @@ var styles = {
 		height: '50px',
 		lineHeight: '50px',
 		padding: '0 50px',
-		textAlign: 'center'
+		textAlign: 'center',
+		fontWeight: 100
 	}
 }
 
