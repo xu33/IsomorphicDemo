@@ -1,10 +1,13 @@
 var gulp = require('gulp')
 var babel = require('gulp-babel')
 var browserify = require('browserify')
+var uglify = require('gulp-uglify')
+var source = require('vinyl-source-stream')
+var buffer = require('vinyl-buffer')
 var fs = require('fs')
 
 gulp.task('compile', function() {
-	var b = browserify({
+	var bs = browserify({
 		entries: 'reactComponentsCompiled/main.js'
 	})
 
@@ -13,14 +16,18 @@ gulp.task('compile', function() {
 		.pipe(gulp.dest('reactComponentsCompiled'))
 
 	res.on('end', function() {
-		b.bundle().pipe(fs.createWriteStream('public/javascripts/main.js'))
+		bs.bundle()
+		.pipe(source('main.js')) // Creates a through stream which takes text as input, and emits a single vinyl file instance for streams down the pipeline to consume.
+		.pipe(buffer())
+		.pipe(uglify())
+		.pipe(gulp.dest('./public/javascripts/'))
 	})
 })
 
 gulp.task('watch', function() {
 	var watcher = gulp.watch('reactComponents/*.jsx', ['compile'])
 	watcher.on('change', function(event) {
-		console.log('File ' + event.path + ' was ' + event.type + ', running tasks')
+		console.log('文件 ' + event.path + ' 类型 ' + event.type + ', 开始构建')
 	})
 })
 

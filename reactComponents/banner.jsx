@@ -15,7 +15,7 @@ var mixin = function() {
 
 var bannerBound = {
 	width: '100%',
-	height: '36%'
+	height: '36.6%'
 }
 
 var imgs = ["http://3gimg.qq.com/trom_s/uploads/2015071410/1000x300 (1).jpg", "http://3gimg.qq.com/trom_s/uploads/2015061918/3B09A1F8-E449-42A7-8BCE-A9F72720B896.png", "http://3gimg.qq.com/trom_s/uploads/2015071317/1000-300.png", "http://3gimg.qq.com/trom_s/uploads/2015071621/1000-300.png", "http://3gimg.qq.com/trom_s/uploads/2015071518/1000-300.png", "http://3gimg.qq.com/trom_s/uploads/2015062909/run-1000x300.jpg", "http://3gimg.qq.com/trom_s/uploads/2015070814/note_1000-300.png", "http://3gimg.qq.com/wspbbs/nodepc/images/banner_4.png"]
