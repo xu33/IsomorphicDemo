@@ -18,6 +18,11 @@ var ThreadItem = React.createClass({
 })
 
 var List = React.createClass({
+	getInitialState: function() {
+		return {
+			loading: false
+		}
+	},
 	render: function() {
 		return (
 				<div style={styles.container}>
@@ -38,17 +43,31 @@ var List = React.createClass({
 	renderFooter: function() {
 		return (
 			<div style={styles.footer}>
-			<button style={styles.btn}onClick={this.loadMore}>加载更多</button>
+			<button style={styles.btn}onClick={this.loadMore}>
+			{this.state.loading ? '加载中...' : '加载更多'}</button>
 			</div>
 		)
 	},
 	loadMore: function() {
+		if (this.state.loading) {
+			return false
+		}
+
+		this.setState({
+			loading: true
+		})
+
 		fetch('/getThreads?offset=' + this.props.threads.length)
 			.then(function(response) {
 				return response.json()
 			})
 			.then((responseData) => {
 				this.props.onChange(responseData)
+			})
+			.then(() => {
+				this.setState({
+					loading: false
+				})
 			})
 	}
 })

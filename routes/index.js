@@ -43,13 +43,20 @@ router.get('/', function(req, res, next) {
 })
 
 router.get('/getThreads', function(req, res, next) {
+	var offset = req.query.offset || 0
 	Threads
 		.findAll({
-			offset: req.query.offset || 0,
+			offset: offset,
 			limit: 10
 		})
 		.then(function(result) {
-			res.send(result)
+			if (offset > 0) {
+				setTimeout(function() {
+					res.send(result)
+				}, 1000)
+			} else {
+				res.send(result)
+			}
 		})
 })
 

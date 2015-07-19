@@ -36,6 +36,11 @@ var ThreadItem = React.createClass({
 var List = React.createClass({
 	displayName: 'List',
 
+	getInitialState: function getInitialState() {
+		return {
+			loading: false
+		};
+	},
 	render: function render() {
 		return React.createElement(
 			'div',
@@ -58,17 +63,29 @@ var List = React.createClass({
 			React.createElement(
 				'button',
 				{ style: styles.btn, onClick: this.loadMore },
-				'加载更多'
+				this.state.loading ? '加载中...' : '加载更多'
 			)
 		);
 	},
 	loadMore: function loadMore() {
 		var _this = this;
 
+		if (this.state.loading) {
+			return false;
+		}
+
+		this.setState({
+			loading: true
+		});
+
 		fetch('/getThreads?offset=' + this.props.threads.length).then(function (response) {
 			return response.json();
 		}).then(function (responseData) {
 			_this.props.onChange(responseData);
+		}).then(function () {
+			_this.setState({
+				loading: false
+			});
 		});
 	}
 });
