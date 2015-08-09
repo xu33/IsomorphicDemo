@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>tree</title>
+	<style>
+	ul, li {
+		list-style: none;
+	}
+	</style>
+</head>
+<body>
+<script src="/javascripts/jquery-1.11.3.min.js"></script>
+<script>
+var fetchFolder = function(folderName) {
+	return $.ajax({
+		url: '/folder/fetchFolder?' + $.param({
+			folderName: folderName
+		})
+	})
+}
+
+var Root = function(parent) {
+	this.label = 'D://gupiao/'
+	this.element = document.createElement('ul')
+	this.children = []
+	parent.appendChild(this.element)
+}
+
+Root.prototype.add = function(node) {
+	this.children.push(node)
+	this.element.appendChild(node.getElement())
+}
+
+Root.prototype.lookup = function(label) {
+	var queue = [].concat(this.children)
+	while (queue.length > 0) {
+		// console.log(queue)
+		var node = queue.shift()
+		// console.log(node)
+		if (node.label === label) {
+			return node
+		}
+		if (node.children && node.children.length > 0) {
+			queue = queue.concat(node.children)
+		}
+	}
+
+	return null
+}
+
+var FolderNode = function(label) {
+	this.label = label
+	this.element = document.createElement('li')
+	this.children = []
+	this.element.innerHTML = label
+	this.container = document.createElement('ul')
+	this.container.style.display = 'none'
+	this.state = 'shrink'
+	this.element.style.border = '1px solid #ccc'
+	this.element.appendChild(this.container)
+
+	var that = this
+	this.element.addEventListener('click', function(e) {
+		e.stopPropagation()
+		e.preventDefault()
+
+		switch (that.state) {
+			case 'shrink': 
+				fetchFolder(that.path)
+				.done(function(data) {
+					var fileData = data.fileData
+					fileData.forEach(function(data) {
+						if (data.leaf) {
+							that.add(new LeafNode(data.label))
+						} else {
+							var path = that.path + data.label
+							var node = new FolderNode(data.label)
+							node.path = path + '/'
+
+							that.add(node)
+						}
+					})
+				})
+				.done(function() {
+					that.container.style.display = 'block'
+					that.state = 'expand'
+				})
+				break
+			case 'expand':
+				that.container.style.display = 'none'
+				that.state = 'shrink'
+				break
+		}
+	})
+}
+
+FolderNode.prototype = {
+	add: function(node) {
+		this.children.push(node)
+		this.container.appendChild(node.getElement())
+	},
+	getElement: function() {
+		return this.element
+	}
+}
+
+var LeafNode = function(label) {
+	this.label = label
+	this.element = document.createElement('li')
+	this.element.innerHTML = label
+	this.element.addEventListener('click', function(e) {
+		e.stopPropagation()
+		e.preventDefault()
+	})
+}
+
+LeafNode.prototype.getElement = function() {
+	return this.element
+}
+
+var r = new Root(document.getElementsByTagName('body')[0])
+
+var fileData = <%-JSON.stringify(fileData)%>
+fileData.forEach(function(data) {
+	if (data.leaf) {
+		r.add(new LeafNode(data.label))
+	} else {
+		var path = r.label + data.label
+		var node = new FolderNode(data.label)
+		node.path = path + '/'
+
+		r.add(node)
+	}
+})
+</script>
+</body>
+</html>
